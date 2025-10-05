@@ -49,5 +49,15 @@
 --output ../variants/annotated.vcf \
 --output-file-format VCF
 
+#extract the annotation into a table:
+#the funcotation feilds header is required, tab delimited
+cat ../variants/annotated.vcf |grep "Funcotation fields are :" |sed 's/|/\t/g' > funcotation_output.txt
+#now you need the exact fields matching the header from your annotated file:
+/home/anushri/gatk-4.2.6.1/ gatk VariantsToTable \
+-V ../variants/annotated.vcf|-F AC -F AN -F DP -F AF -F FUNCOTATION \
+-O ../variants/annotated.table
+
+#extract only the funcotation fields and make them tab delimited, overwrite the funcotation_output file
+../variants/annotation.table|cut -f 5|sed 's/|/\t/g' >> funcotation_output.txt
 
 
